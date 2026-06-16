@@ -22,39 +22,50 @@ class ImportProductJob implements ShouldQueue
     public function handle(ProductImportWithJobService $service): void
     {
         $result = $service->importSingle($this->record);
+        $batchId = $this->batchId();
 
         Log::info('Product job processed', [
             'product_id' => $this->record['id'] ?? null,
             'status' => $result['status'] ?? 'unknown',
+            'batch_id' => $batchId,
         ]);
 
-        // store batch counters safely
-        cache()->increment("import:{$this->batchId()}:total");
+        cache()->increment("import:{$batchId}:total");
+        cache()->increment("import:{$batchId}:processed");
 
         if (($result['status'] ?? null) === 'imported') {
-            cache()->increment("import:{$this->batchId()}:imported");
+            cache()->increment("import:{$batchId}:imported");
         }
 
         if (($result['status'] ?? null) === 'updated') {
-            cache()->increment("import:{$this->batchId()}:updated");
+            cache()->increment("import:{$batchId}:updated");
         }
 
         if (($result['status'] ?? null) === 'failed') {
-            cache()->increment("import:{$this->batchId()}:failed");
-
-            cache()->push(
-                "import:{$this->batchId()}:errors",
-                $result['error'] ?? 'Unknown error'
-            );
+            cache()->increment("import:{$batchId}:failed");
+            $this->appendBatchError($batchId, $result['error'] ?? 'Unknown error');
         }
 
         Log::info('Import progress update', [
-        'batch_id' => $this->batchId(),
-        'processed' => cache("import:{$this->batchId()}:processed"),
-        'imported' => cache("import:{$this->batchId()}:imported"),
-        'updated' => cache("import:{$this->batchId()}:updated"),
-        'failed' => cache("import:{$this->batchId()}:failed"),
-    ]);
+            'batch_id' => $batchId,
+            'processed' => cache()->get("import:{$batchId}:processed", 0),
+            'imported' => cache()->get("import:{$batchId}:imported", 0),
+            'updated' => cache()->get("import:{$batchId}:updated", 0),
+            'failed' => cache()->get("import:{$batchId}:failed", 0),
+        ]);
+    }
+
+    private function appendBatchError(string $batchId, string $error): void
+    {
+        $errors = cache()->get("import:{$batchId}:errors", []);
+
+        if (! is_array($errors)) {
+            $errors = [];
+        }
+
+        $errors[] = $error;
+
+        cache()->put("import:{$batchId}:errors", $errors, now()->addHours(2));
     }
 
     private function batchId()
