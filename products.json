@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "merchant_id": "merchant_001",
+        "name": "Wireless Bluetooth Headphones",
+        "link": "https://shop.example.com/products/wireless-headphones",
+        "image_link": "https://shop.example.com/images/headphones.jpg",
+        "price": 79.99,
+        "currency": "EUR"
+    },
+    {
+        "id": 2,
+        "merchant_id": "merchant_001",
+        "name": "USB-C Charging Cable",
+        "link": "https://shop.example.com/products/usb-c-cable",
+        "image_link": "https://shop.example.com/images/usb-c-cable.jpg",
+        "price": 12.50,
+        "currency": "EUR"
+    },
+    {
+        "id": 3,
+        "merchant_id": "merchant_002",
+        "name": "Mechanical Keyboard",
+        "link": "https://store.example.com/items/mechanical-keyboard",
+        "image_link": "https://store.example.com/images/keyboard.jpg",
+        "price": 149.00,
+        "currency": "USD"
+    },
+    {
+        "id": 4,
+        "merchant_id": "merchant_002",
+        "name": "Wireless Bluetooth Headphones",
+        "link": "https://another.example.com/headphones",
+        "image_link": "https://another.example.com/images/headphones.jpg",
+        "price": 85.00,
+        "currency": "USD"
+    },
+    {
+        "id": 5,
+        "merchant_id": "merchant_003",
+        "name": "",
+        "link": "https://bad.example.com/invalid",
+        "image_link": "https://bad.example.com/invalid.jpg",
+        "price": 0,
+        "currency": "XXX"
+    },
+    {
+        "id": 6,
+        "merchant_id": "merchant_003",
+        "name": "Gaming Mouse",
+        "link": "https://shop.example.com/products/wireless-headphones",
+        "image_link": "https://shop.example.com/images/mouse.jpg",
+        "price": 45.99,
+        "currency": "GBP"
+    }
+]
