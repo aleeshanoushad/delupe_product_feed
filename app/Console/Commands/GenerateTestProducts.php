@@ -26,7 +26,7 @@ class GenerateTestProducts extends Command
 
             $product = [
                 'id' => $i,
-                'merchant_id' => 'merchant_' . str_pad(rand(1,1000), 3, '0', STR_PAD_LEFT),
+                'merchant_id' => 'merchant_' . str_pad((string) rand(1,1000), 3, '0', STR_PAD_LEFT),
                 'name' => 'Product ' . $i,
                 'link' => "https://shop.example.com/products/{$i}",
                 'image_link' => "https://shop.example.com/images/{$i}.jpg",

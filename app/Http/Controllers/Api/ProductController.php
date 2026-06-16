@@ -12,8 +12,8 @@ class ProductController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $page = max(1, (int) $request->query('page', 1));
-        $limit = min(100, max(1, (int) $request->query('limit', 50)));
+        $page = max(1, (int) $request->query('page', '1'));
+        $limit = min(100, max(1, (int) $request->query('limit', '50')));
 
         $query = Product::query();
 

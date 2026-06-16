@@ -11,6 +11,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @property string|null $batchId
+ */
 class ImportProductJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
@@ -68,8 +71,8 @@ class ImportProductJob implements ShouldQueue
         cache()->put("import:{$batchId}:errors", $errors, now()->addHours(2));
     }
 
-    private function batchId()
+    private function batchId(): string
     {
-        return $this->job?->batchId ?? 'no-batch';
+        return is_string($this->batchId) ? $this->batchId : 'no-batch';
     }
 }
