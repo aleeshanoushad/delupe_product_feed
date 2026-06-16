@@ -49,7 +49,7 @@ class ProductController extends Controller
         $averagePrice = $count > 0 ? round($totalPrice / $count, 2) : 0.0;
 
         $currencies = Product::query()
-            ->select('currency', DB::raw('COUNT(*) as count'))
+            ->select([ 'currency', DB::raw('COUNT(*) as count') ])
             ->groupBy('currency')
             ->pluck('count', 'currency')
             ->toArray();

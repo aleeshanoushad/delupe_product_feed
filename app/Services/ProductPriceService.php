@@ -15,18 +15,29 @@ class ProductPriceService
         Product::query()->orderBy('id')->chunkById(100, function ($products) use ($multiplier, &$affected) {
             foreach ($products as $product) {
                 DB::transaction(function () use ($product, $multiplier, &$affected) {
-                    $locked = Product::lockForUpdate()->find($product->id);
+                    // Use a DB table-level select with FOR UPDATE to ensure we get a row lock
+                    $row = DB::table('products')
+                        ->where('id', $product->id)
+                        ->lockForUpdate()
+                        ->first();
 
-                    if (! $locked) {
+                    if (! $row) {
                         return;
                     }
 
-                    if ($locked->original_price === null) {
-                        $locked->original_price = $locked->price;
-                    }
+                    $currentPrice = (float) $row->price;
+                    $originalPrice = $row->original_price !== null ? (float) $row->original_price : $currentPrice;
 
-                    $locked->price = round((float) $locked->price * $multiplier, 2);
-                    $locked->save();
+                    $newPrice = round($currentPrice * $multiplier, 2);
+
+                    DB::table('products')
+                        ->where('id', $product->id)
+                        ->update([
+                            'price' => $newPrice,
+                            'original_price' => $originalPrice,
+                            'updated_at' => now(),
+                        ]);
+
                     $affected++;
                 });
             }
