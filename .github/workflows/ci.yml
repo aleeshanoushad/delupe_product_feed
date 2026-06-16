@@ -55,12 +55,13 @@ jobs:
       - name: Run tests
         env:
           DB_CONNECTION: pgsql
-          DB_HOST:  postgres
+          DB_HOST:  127.0.0.1
           DB_PORT: 5432
           DB_USERNAME: del
           DB_PASSWORD: delupe123
           DB_DATABASE: 'delupe_test'
           API_KEY: test_api_key
+          CACHE_STORE: array
         run: php artisan test
 
       - name: Install PHPStan
